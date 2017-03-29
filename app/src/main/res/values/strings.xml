@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">Dice</string>
     <string name="roll_button_name">Roll</string>
+    <string name="dice_4">4</string>
+    <string name="dice_6">6</string>
+    <string name="dice_8">8</string>
+    <string name="dice_10">10</string>
+    <string name="dice_12">12</string>
+    <string name="dice_20">20</string>
+    <string name="dice_100">100</string>
+    <string name="dice_custom">Custom</string>
 </resources>
