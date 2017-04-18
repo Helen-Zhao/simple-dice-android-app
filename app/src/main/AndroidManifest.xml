@@ -29,7 +29,6 @@
 
         <activity
             android:name=".CustomDiceActivity"
-            android:label="@string/title_activity_custom_dice"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
