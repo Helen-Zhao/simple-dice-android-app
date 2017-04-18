@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewManager;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -26,10 +25,8 @@ public class CustomDiceActivity extends AppCompatActivity {
 
     DiceRollService mDiceRollService;
     DiceCounterService mDiceCounterService;
-    AddNewCustomDiceService mAddNewCustomDiceService;
     boolean mDiceRollServiceBound = false;
     boolean mDiceCounterServiceBound = false;
-    boolean mAddNewCustomDiceServiceBound = false;
     DiceRolls diceRolls = new DiceRolls();
 
     @Override
@@ -110,10 +107,6 @@ public class CustomDiceActivity extends AppCompatActivity {
         Intent diceCounterIntent  = new Intent(this, DiceCounterService.class);
         startService(diceCounterIntent);
         bindService(diceCounterIntent, mDiceCounterServiceConnection, Context.BIND_AUTO_CREATE);
-
-        Intent AddNewCustomDiceIntent  = new Intent(this, AddNewCustomDiceService.class);
-        startService(AddNewCustomDiceIntent);
-        bindService(AddNewCustomDiceIntent, mAddNewCustomDiceServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -127,11 +120,6 @@ public class CustomDiceActivity extends AppCompatActivity {
         if(mDiceCounterServiceBound) {
             unbindService(mDiceCounterServiceConnection);
             mDiceCounterServiceBound = false;
-        }
-
-        if(mAddNewCustomDiceServiceBound) {
-            unbindService(mAddNewCustomDiceServiceConnection);
-            mAddNewCustomDiceServiceBound = false;
         }
     }
 
@@ -192,21 +180,4 @@ public class CustomDiceActivity extends AppCompatActivity {
             mDiceRollServiceBound = false;
         }
     };
-
-    private ServiceConnection mAddNewCustomDiceServiceConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.d("SVTEST", "on service connected");
-            AddNewCustomDiceService.AddNewCustomDiceBinder addNewCustomDiceBinder = (AddNewCustomDiceService.AddNewCustomDiceBinder) service;
-            mAddNewCustomDiceService = addNewCustomDiceBinder.getService();
-            mAddNewCustomDiceServiceBound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mDiceRollServiceBound = false;
-        }
-    };
-
 }
