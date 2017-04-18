@@ -143,7 +143,18 @@ public class StandardDiceActivity extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        resetAllDiceCounts();
+    }
+
     // Helper Functions
+
+    public void resetAllDiceCounts() {
+        mDiceCounterService.resetDiceCounts();
+    }
 
     private void removeAllChildren(ViewGroup view) {
         int totalChildren = view.getChildCount();

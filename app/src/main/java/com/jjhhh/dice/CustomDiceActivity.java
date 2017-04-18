@@ -39,20 +39,6 @@ public class CustomDiceActivity extends AppCompatActivity {
         final Button rollButton = (Button) findViewById(R.id.rollButton);
         final TextView rollNumber = (TextView) findViewById(R.id.rollNumber);
 
-        final TextView diceFourNum = (TextView) findViewById(R.id.dice4Num);
-        final TextView diceSixNum = (TextView) findViewById(R.id.dice6Num);
-        final TextView diceEightNum = (TextView) findViewById(R.id.dice8Num);
-        final TextView diceTenNum = (TextView) findViewById(R.id.dice10Num);
-        final TextView diceTwelveNum = (TextView) findViewById(R.id.dice12Num);
-        final TextView diceTwentyNum = (TextView) findViewById(R.id.dice20Num);
-
-        final ImageButton diceFourButton = (ImageButton) findViewById(R.id.dice4);
-        final ImageButton diceSixButton = (ImageButton) findViewById(R.id.dice6);
-        final ImageButton diceEightButton = (ImageButton) findViewById(R.id.dice8);
-        final ImageButton diceTenButton = (ImageButton) findViewById(R.id.dice10);
-        final ImageButton diceTwelveButton = (ImageButton) findViewById(R.id.dice12);
-        final ImageButton diceTwentyButton = (ImageButton) findViewById(R.id.dice20);
-
         final LinearLayout rollLogPane = (LinearLayout) findViewById(R.id.rollLogPane);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -83,50 +69,7 @@ public class CustomDiceActivity extends AppCompatActivity {
                 }
             }
         });
-
-        diceFourButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDiceCounterService.addDice(4);
-                diceFourNum.setText(Integer.toString(mDiceCounterService.getDice(4)));
-            }
-        });
-        diceSixButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDiceCounterService.addDice(6);
-                diceSixNum.setText(Integer.toString(mDiceCounterService.getDice(6)));
-            }
-        });
-        diceEightButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDiceCounterService.addDice(8);
-                diceEightNum.setText(Integer.toString(mDiceCounterService.getDice(8)));
-            }
-        });
-        diceTenButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDiceCounterService.addDice(10);
-                diceTenNum.setText(Integer.toString(mDiceCounterService.getDice(10)));
-            }
-        });
-        diceTwelveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDiceCounterService.addDice(12);
-                diceTwelveNum.setText(Integer.toString(mDiceCounterService.getDice(12)));
-
-            }
-        });
-        diceTwentyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDiceCounterService.addDice(20);
-                diceTwentyNum.setText(Integer.toString(mDiceCounterService.getDice(20)));
-            }
-        });
+        
     }
 
     public void callAddNewDiceService(int i) {
@@ -192,7 +135,13 @@ public class CustomDiceActivity extends AppCompatActivity {
         }
     }
 
-    // Helper Functions
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        resetAllDiceCounts();
+    }
+
+// Helper Functions
 
     private void removeAllChildren(ViewGroup view) {
         int totalChildren = view.getChildCount();
@@ -206,6 +155,10 @@ public class CustomDiceActivity extends AppCompatActivity {
         FragmentManager fm = getFragmentManager();
         android.app.DialogFragment newFragment = new CustomDiceDialogFragment();
         newFragment.show(fm, "abc");
+    }
+
+    public void resetAllDiceCounts() {
+        mDiceCounterService.resetDiceCounts();
     }
 
     // Service Connections

@@ -16,7 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".StandardDiceActivity" />
+        <activity
+            android:name=".StandardDiceActivity"
+            android:label="Dice" />
 
         <service
             android:name=".DiceRollService"
@@ -29,7 +31,7 @@
 
         <activity
             android:name=".CustomDiceActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="Custom Dice" />
 
         <service
             android:name=".AddNewCustomDiceService"
