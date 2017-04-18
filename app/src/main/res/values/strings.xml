@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Dice</string>
     <string name="roll_button_name">Roll</string>
+    <string name="standard_button_name">Standard</string>
+    <string name="custom_button_name">Custom</string>
+    <string name="title_activity_custom_dice">CustomDiceActivity</string>
 </resources>
