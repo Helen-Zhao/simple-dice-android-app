@@ -47,6 +47,10 @@ public class DiceCounterService extends Service {
         return diceCounts.get(diceType);
     }
 
+    public void resetDiceCounts() {
+        diceCounts = new HashMap<>();
+    }
+
 
     public class DiceCounterBinder extends Binder {
         DiceCounterService getService() {

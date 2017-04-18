@@ -16,6 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".StandardDiceActivity"
+            android:label="Dice" />
 
         <service
             android:name=".DiceRollService"
@@ -23,6 +26,15 @@
             android:exported="true" />
         <service
             android:name=".DiceCounterService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name=".CustomDiceActivity"
+            android:label="Custom Dice" />
+
+        <service
+            android:name=".AddNewCustomDiceService"
             android:enabled="true"
             android:exported="true"></service>
     </application>
