@@ -10,6 +10,7 @@ import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewManager;
@@ -25,8 +26,10 @@ public class CustomDiceActivity extends AppCompatActivity {
 
     DiceRollService mDiceRollService;
     DiceCounterService mDiceCounterService;
+    AddNewCustomDiceService mAddNewCustomDiceService;
     boolean mDiceRollServiceBound = false;
-    boolean mDiceCounterServiceBound;
+    boolean mDiceCounterServiceBound = false;
+    boolean mAddNewCustomDiceServiceBound = false;
     DiceRolls diceRolls = new DiceRolls();
 
     @Override
@@ -126,8 +129,31 @@ public class CustomDiceActivity extends AppCompatActivity {
         });
     }
 
-    private void someFunction(int i) {
-         showDialog();
+    public void callAddNewDiceService(int i) {
+        final int num = i;
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout buttonContainer = (LinearLayout) findViewById(R.id.buttonContainer);
+        Button customDiceButton = new Button(CustomDiceActivity.this);
+        final TextView customButtonText = new TextView(CustomDiceActivity.this);
+
+        buttonContainer.addView(customDiceButton);
+        buttonContainer.addView(customButtonText);
+
+        customDiceButton.setText("" + i);
+        customDiceButton.setLayoutParams(lp);
+        customButtonText.setText("" + 0);
+        customButtonText.setLayoutParams(lp);
+        customButtonText.setGravity(Gravity.CENTER);
+
+        customDiceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDiceCounterService.addDice(num);
+                customButtonText.setText(Integer.toString((mDiceCounterService.getDice(num))));
+            }
+        });
+
+
     }
 
     @Override
@@ -141,6 +167,10 @@ public class CustomDiceActivity extends AppCompatActivity {
         Intent diceCounterIntent  = new Intent(this, DiceCounterService.class);
         startService(diceCounterIntent);
         bindService(diceCounterIntent, mDiceCounterServiceConnection, Context.BIND_AUTO_CREATE);
+
+        Intent AddNewCustomDiceIntent  = new Intent(this, AddNewCustomDiceService.class);
+        startService(AddNewCustomDiceIntent);
+        bindService(AddNewCustomDiceIntent, mAddNewCustomDiceServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -154,6 +184,11 @@ public class CustomDiceActivity extends AppCompatActivity {
         if(mDiceCounterServiceBound) {
             unbindService(mDiceCounterServiceConnection);
             mDiceCounterServiceBound = false;
+        }
+
+        if(mAddNewCustomDiceServiceBound) {
+            unbindService(mAddNewCustomDiceServiceConnection);
+            mAddNewCustomDiceServiceBound = false;
         }
     }
 
@@ -197,6 +232,22 @@ public class CustomDiceActivity extends AppCompatActivity {
             DiceRollService.DiceRollBinder diceRollBinder = (DiceRollService.DiceRollBinder) service;
             mDiceRollService = diceRollBinder.getService();
             mDiceRollServiceBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mDiceRollServiceBound = false;
+        }
+    };
+
+    private ServiceConnection mAddNewCustomDiceServiceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.d("SVTEST", "on service connected");
+            AddNewCustomDiceService.AddNewCustomDiceBinder addNewCustomDiceBinder = (AddNewCustomDiceService.AddNewCustomDiceBinder) service;
+            mAddNewCustomDiceService = addNewCustomDiceBinder.getService();
+            mAddNewCustomDiceServiceBound = true;
         }
 
         @Override

@@ -31,8 +31,7 @@ public class CustomDiceDialogFragment extends android.app.DialogFragment {
                 .setView(npView)
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        //call service
-
+                        ((CustomDiceActivity) getActivity()).callAddNewDiceService(mDiceNumberPicker.getValue());
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
