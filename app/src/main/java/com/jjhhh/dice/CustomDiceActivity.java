@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.jjhhh.dice.Models.DiceCount;
 import com.jjhhh.dice.Models.DiceRolls;
 
+// UI for rolling custom types of dice
 public class CustomDiceActivity extends AppCompatActivity {
 
     DiceRollService mDiceRollService;
@@ -33,6 +34,7 @@ public class CustomDiceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom_dice);
+        // References to UI elements
         final Button rollButton = (Button) findViewById(R.id.rollButton);
         final TextView rollNumber = (TextView) findViewById(R.id.rollNumber);
 
@@ -44,23 +46,30 @@ public class CustomDiceActivity extends AppCompatActivity {
             public void onClick(View view) {
                 showDialog();
             }
-        });
+        }); // Show a popup on clicking fab button
 
         rollButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // If services have started up and bound properly
                 if(mDiceRollServiceBound && mDiceCounterServiceBound) {
+                    // Rolls dice on pressing roll button
                     diceRolls = mDiceRollService.rollDice(mDiceCounterService.getAllDice());
                     rollNumber.setText(Integer.toString(diceRolls.getSum()));
-
+                    // Reset log of dice rolls
                     removeAllChildren(rollLogPane);
 
+                    // Add logs of dices rolls to log
+                    // UI Layout
                     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                     for (DiceCount d : diceRolls.getRolls()) {
                         TextView rollLogEntry = new TextView(CustomDiceActivity.this);
+                        // Text sizing/font
                         rollLogEntry.setTextSize(15);
                         rollLogEntry.setLayoutParams(lp);
+                        // Set text to roll result
                         rollLogEntry.setText("d" + d.getDie() + ": " + d.getCount());
+                        // Add text to UI
                         rollLogPane.addView(rollLogEntry);
                     }
                 }
@@ -71,24 +80,31 @@ public class CustomDiceActivity extends AppCompatActivity {
 
     public void callAddNewDiceService(int i) {
         final int num = i;
+        // Create a new button to place in UI for new custom type of dice
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         LinearLayout buttonContainer = (LinearLayout) findViewById(R.id.buttonContainer);
         Button customDiceButton = new Button(CustomDiceActivity.this);
+        // Create text for how many of this dice are to be rolled
         final TextView customButtonText = new TextView(CustomDiceActivity.this);
 
+        // Add button and text to UI
         buttonContainer.addView(customDiceButton);
         buttonContainer.addView(customButtonText);
 
+        // Set up UI stuff for button and text (string, positions)
         customDiceButton.setText("" + i);
         customDiceButton.setLayoutParams(lp);
         customButtonText.setText("" + 0);
         customButtonText.setLayoutParams(lp);
         customButtonText.setGravity(Gravity.CENTER);
 
+        // Listen for pressing dice button
         customDiceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Add dice to list of dice to roll
                 mDiceCounterService.addDice(num);
+                // Update text
                 customButtonText.setText(Integer.toString((mDiceCounterService.getDice(num))));
             }
         });
@@ -96,6 +112,7 @@ public class CustomDiceActivity extends AppCompatActivity {
 
     }
 
+    // Start services to track dice to roll and for rolling dice
     @Override
     protected void onStart() {
         super.onStart();
@@ -109,6 +126,7 @@ public class CustomDiceActivity extends AppCompatActivity {
         bindService(diceCounterIntent, mDiceCounterServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
+    // Stop services when activity stops
     @Override
     protected void onStop() {
         super.onStop();
@@ -123,6 +141,7 @@ public class CustomDiceActivity extends AppCompatActivity {
         }
     }
 
+    // Reset counts of dice when press back
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -130,7 +149,8 @@ public class CustomDiceActivity extends AppCompatActivity {
     }
 
 // Helper Functions
-
+    // Remove child elements of a UI view
+    // Used to remove logs from log
     private void removeAllChildren(ViewGroup view) {
         int totalChildren = view.getChildCount();
         for(int i = 0; i < totalChildren; i++) {
@@ -139,18 +159,21 @@ public class CustomDiceActivity extends AppCompatActivity {
         }
     }
 
+    // Show number picker pop up
     public void showDialog() {
         FragmentManager fm = getFragmentManager();
         android.app.DialogFragment newFragment = new CustomDiceDialogFragment();
         newFragment.show(fm, "abc");
     }
 
+    // Reset counts of dice
     public void resetAllDiceCounts() {
         mDiceCounterService.resetDiceCounts();
     }
 
     // Service Connections
 
+    // Android stuff to use services
     private ServiceConnection mDiceCounterServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {

@@ -13,10 +13,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // References to UI elements
         final Button standardDiceButton = (Button) findViewById(R.id.standardDiceButton);
         final Button customDiceButton = (Button) findViewById(R.id.customDiceButton);
 
-
+        // Start other activities (UI pages) on pressing linked button
         standardDiceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
