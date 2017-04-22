@@ -12,6 +12,7 @@ import android.widget.NumberPicker;
  * Created by Jay on 18/04/2017.
  */
 
+// Pop up window for picking a number of sides for a custom die
 public class CustomDiceDialogFragment extends android.app.DialogFragment {
     private NumberPicker mDiceNumberPicker;
 
@@ -19,11 +20,14 @@ public class CustomDiceDialogFragment extends android.app.DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View npView = inflater.inflate(R.layout.number_picker_dialog_layout, null);
+        // References a UI element
         mDiceNumberPicker = (NumberPicker) npView.findViewById(R.id.numberPicker);
+        // Set min/max selectable values
         mDiceNumberPicker.setMinValue(2);
         mDiceNumberPicker.setMaxValue(100);
 
         // Use the Builder class for convenient dialog construction
+        // Sets up buttons, titles, UI stuff
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder
                 .setTitle("Custom Dice Creator")

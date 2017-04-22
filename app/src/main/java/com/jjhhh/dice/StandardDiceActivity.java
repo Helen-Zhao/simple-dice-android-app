@@ -19,6 +19,9 @@ import android.widget.TextView;
 import com.jjhhh.dice.Models.DiceCount;
 import com.jjhhh.dice.Models.DiceRolls;
 
+/*
+ UI for standard dice page.
+ */
 public class StandardDiceActivity extends AppCompatActivity {
 
     DiceRollService mDiceRollService;
@@ -31,9 +34,11 @@ public class StandardDiceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_standard_dice);
+        // Storing references to different UI elements on activity
         final Button rollButton = (Button) findViewById(R.id.rollButton);
         final TextView rollNumber = (TextView) findViewById(R.id.rollNumber);
 
+        // How many of a dice are to be rolled
         final TextView diceFourNum = (TextView) findViewById(R.id.dice4Num);
         final TextView diceSixNum = (TextView) findViewById(R.id.dice6Num);
         final TextView diceEightNum = (TextView) findViewById(R.id.dice8Num);
@@ -41,6 +46,7 @@ public class StandardDiceActivity extends AppCompatActivity {
         final TextView diceTwelveNum = (TextView) findViewById(R.id.dice12Num);
         final TextView diceTwentyNum = (TextView) findViewById(R.id.dice20Num);
 
+        // Types of dice
         final ImageButton diceFourButton = (ImageButton) findViewById(R.id.dice4);
         final ImageButton diceSixButton = (ImageButton) findViewById(R.id.dice6);
         final ImageButton diceEightButton = (ImageButton) findViewById(R.id.dice8);
@@ -50,30 +56,42 @@ public class StandardDiceActivity extends AppCompatActivity {
 
         final LinearLayout rollLogPane = (LinearLayout) findViewById(R.id.rollLogPane);
 
+        // Listen for pressing roll button
         rollButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // If service to roll is bound (set up)
                 if(mDiceRollServiceBound && mDiceCounterServiceBound) {
+                    // Use service to roll all dice
                     diceRolls = mDiceRollService.rollDice(mDiceCounterService.getAllDice());
+                    // Set main number to be the total number rolled
                     rollNumber.setText(Integer.toString(diceRolls.getSum()));
 
+                    // Remove all logs of previous rolls
                     removeAllChildren(rollLogPane);
 
+                    // Make layout for roll log text to take (eg. font, position)
                     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    // For every dice rolled
                     for (DiceCount d : diceRolls.getRolls()) {
+                        // Create a text element
                         TextView rollLogEntry = new TextView(StandardDiceActivity.this);
                         rollLogEntry.setTextSize(15);
                         rollLogEntry.setLayoutParams(lp);
+                        // Set text to type of dice (number of sides) and actual roll
                         rollLogEntry.setText("d" + d.getDie() + ": " + d.getCount());
+                        // Add roll to log
                         rollLogPane.addView(rollLogEntry);
                     }
                 }
             }
         });
 
+        // Listeners for all dice buttons
         diceFourButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Add the clicked dice type to list of dice to roll
                 mDiceCounterService.addDice(4);
                 diceFourNum.setText(Integer.toString(mDiceCounterService.getDice(4)));
             }
@@ -116,19 +134,21 @@ public class StandardDiceActivity extends AppCompatActivity {
         });
     }
 
+    // Runs on activity start up?
     @Override
     protected void onStart() {
         super.onStart();
-
+        // Start a service for rolling dice
         Intent diceRollIntent  = new Intent(this, DiceRollService.class);
         startService(diceRollIntent);
         bindService(diceRollIntent, mDiceRollServiceConnection, Context.BIND_AUTO_CREATE);
-
+        // Start a service for storing dice to be rolled
         Intent diceCounterIntent  = new Intent(this, DiceCounterService.class);
         startService(diceCounterIntent);
         bindService(diceCounterIntent, mDiceCounterServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
+    // Run on activity stop, 'kill' services started
     @Override
     protected void onStop() {
         super.onStop();
@@ -144,6 +164,7 @@ public class StandardDiceActivity extends AppCompatActivity {
     }
 
 
+    // Reset known dice to 0 when going back to main menu
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -156,6 +177,8 @@ public class StandardDiceActivity extends AppCompatActivity {
         mDiceCounterService.resetDiceCounts();
     }
 
+    // Remove all child elements of passed view
+    // Used to remove old logs of dice rolls
     private void removeAllChildren(ViewGroup view) {
         int totalChildren = view.getChildCount();
         for(int i = 0; i < totalChildren; i++) {
@@ -166,6 +189,7 @@ public class StandardDiceActivity extends AppCompatActivity {
 
     // Service Connections
 
+    // Android stuff to start and connect to services
     private ServiceConnection mDiceCounterServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
