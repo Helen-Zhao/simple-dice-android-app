@@ -10,7 +10,6 @@ import com.jjhhh.dice.Models.DiceCount;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 // Service that keeps counts of known dice
 public class DiceCounterService extends Service {
@@ -54,6 +53,10 @@ public class DiceCounterService extends Service {
     public int getDice(int diceType) {
         if(!diceCounts.containsKey(diceType)) { return 0; }
         return diceCounts.get(diceType);
+    }
+
+    public boolean hasDice(int diceType) {
+        return diceCounts.containsKey((diceType));
     }
 
     // Reset all known dice
