@@ -80,6 +80,12 @@ public class CustomDiceActivity extends AppCompatActivity {
 
     public void callAddNewDiceService(int i) {
         final int num = i;
+
+        boolean hasDice = mDiceCounterService.hasDice(num);
+        if (hasDice) {
+            return;
+        }
+
         // Create a new button to place in UI for new custom type of dice
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         LinearLayout buttonContainer = (LinearLayout) findViewById(R.id.buttonContainer);
@@ -109,7 +115,8 @@ public class CustomDiceActivity extends AppCompatActivity {
             }
         });
 
-
+        mDiceCounterService.addDice(num);
+        customButtonText.setText(Integer.toString((mDiceCounterService.getDice(num))));
     }
 
     // Start services to track dice to roll and for rolling dice
